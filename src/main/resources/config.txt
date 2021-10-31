@@ -1,0 +1,2 @@
+oilTempDevice=28-3c01e0769c2e
+waterTempDevice= 28-3c01f0960d22

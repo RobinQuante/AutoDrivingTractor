@@ -8,10 +8,15 @@ public class Sequenz {
 
     final private TractorFunctions functions;
 
+
+
     public Sequenz(){
         functions = new TractorFunctions();
     }
 
+    public TractorFunctions getFunctions() {
+        return functions;
+    }
     public Boolean sequenzMainCutterDumpingOn(Boolean state){
         try {
             if(state) {
@@ -21,6 +26,7 @@ public class Sequenz {
                 Thread.sleep(400);
                 functions.cutterMainLift(1);
                 Thread.sleep(2000);
+                functions.cutterMainLift(0);
             } else {
                 functions.setCutterMainDamping(false);
             }
@@ -31,11 +37,15 @@ public class Sequenz {
 
     public Boolean sequenzCutterMain(Boolean state){
         try {
+            Boolean leftOnlyState = functions.getLeftonlyState();
             if(state) {
                 functions.cutterRightLift(1);
                 functions.cutterLeftLift(1);
                 functions.cutterMainLift(1);
                 Thread.sleep(400);
+                functions.cutterRightLift(0);
+                functions.cutterLeftLift(0);
+                functions.cutterMainLift(0);
                 functions.setCutterleftonly(true);
                 functions.setCutterMain(true);
                 Thread.sleep(400);
@@ -43,44 +53,35 @@ public class Sequenz {
                 Thread.sleep(400);
             } else {
                 functions.setCutterMain(false);
-                functions.setCutterleftonly(true);
+                functions.setCutterleftonly(leftOnlyState);
             }
         }catch (InterruptedException ie){ie.printStackTrace();return false;}
         return true;
     }
 
-    public Boolean sequenzMainCutterLift(int diraction){
-        try {
-            functions.cutterMainLift(diraction);
-            Thread.sleep(200);
+    public Boolean sequenzCutterLeftOnly(Boolean state){
+                functions.setCutterleftonly(state);
+        return true;
+    }
 
-        }catch (InterruptedException ie){ie.printStackTrace();return false;}
+    public Boolean sequenzMainCutterLift(int diraction){
+            functions.cutterMainLift(diraction);
         return true;
     }
 
     public Boolean sequenzLeftCutterLift(int diraction){
-        try {
             functions.cutterLeftLift(diraction);
-            Thread.sleep(200);
-
-        }catch (InterruptedException ie){ie.printStackTrace();return false;}
         return true;
     }
 
 
     public Boolean sequenzRightCutterLift(int diraction){
-        try {
             functions.cutterRightLift(diraction);
-            Thread.sleep(200);
-
-        }catch (InterruptedException ie){ie.printStackTrace();return false;}
         return true;
     }
 
     public Boolean sequenzAllWheel(Boolean state){
-        if(state){
             functions.setAllwheel(state);
-        }
         return true;
     }
 
@@ -100,6 +101,8 @@ public class Sequenz {
                 functions.cutterRightLift(1);
                 Thread.sleep(200);
                 sequenzMainCutterDumpingOn(true);
+                functions.cutterLeftLift(0);
+                functions.cutterRightLift(0);
                 functions.setHydraulik(false);
             }
 

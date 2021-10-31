@@ -2,87 +2,64 @@ package autodrivingtractor.inout;
 
 import com.pi4j.io.gpio.*;
 
-import autodrivingtractor.inout.TractorFunctions;
-
 public class TractorFunctions {
 
-    static final int LiftUp = 1;
-    static final int LiftDown = -1;
-    static final int LiftStop = 0;
-    final GpioPinDigitalOutput worklight;
-    final GpioPinDigitalOutput cutterMain;
-    final GpioPinDigitalOutput cutterMainDamping;
-    final GpioPinDigitalOutput cutterLeftOnly;
-    final GpioPinDigitalOutput cutterMainUp;
-    final GpioPinDigitalOutput cutterMainDown;
-    final GpioPinDigitalOutput cutterRightUp;
-    final GpioPinDigitalOutput cutterRightDown;
-    final GpioPinDigitalOutput cutterLeftUp;
-    final GpioPinDigitalOutput cutterLeftDown;
+    final static int LiftUp = 1;
+    final static int LiftDown = -1;
+    final static int LiftStop = 0;
+    private Boolean worklight;
+    private Boolean cutterMain;
+    private Boolean cutterMainDamping;
+    private Boolean cutterLeftOnly;
+    private Boolean cutterMainUp;
+    private Boolean cutterMainDown;
+    private Boolean cutterRightUp;
+    private Boolean cutterRightDown;
+    private Boolean cutterLeftUp;
+    private Boolean cutterLeftDown;
 
-    final GpioPinDigitalOutput drivingFast;
-    final GpioPinDigitalOutput allWheel;
-    final GpioPinDigitalOutput horn;
-    final GpioPinDigitalOutput standingLight;
-    final GpioPinDigitalOutput drivingLight;
-    final GpioPinDigitalOutput hydraulik;
+    private Boolean drivingFast;
+    private Boolean allWheel;
+    private Boolean horn;
+    private Boolean standingLight;
+    private Boolean drivingLight;
+    private Boolean hydraulik;
+
+    Boolean off =false;
+    Boolean on = true;
 
     public TractorFunctions() {
-        final GpioController gpio = GpioFactory.getInstance();
-        allWheel = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_02, "Alrad ein", PinState.LOW);
-        drivingFast = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_03, "Schnellgang", PinState.LOW);
-        standingLight = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_12, "Standlicht", PinState.LOW);
-        drivingLight = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_13, "Fahrlicht", PinState.LOW);
-        worklight = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_14, "Arbeitslicht", PinState.LOW);
-        cutterMainUp = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_21, "Schneidwerk heben", PinState.LOW);
-        cutterMainDown = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_22, "Schneidwerk Senken", PinState.LOW);
-        cutterMainDamping = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_23, "Schneidwerk Links", PinState.LOW);
-        cutterLeftUp = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_24, "Links Heben", PinState.LOW);
-        cutterLeftDown = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_25, "Links Senken", PinState.LOW);
-
-        //Rechte Pinreihe
-        cutterMain = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_04, "Schneidwerk An", PinState.LOW);
-        cutterLeftOnly = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_05, "Schneidwerk Links", PinState.LOW);
-        horn = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_06, "Hupe", PinState.LOW);
-        // RotationSpeed GPIO 26
-        cutterRightUp = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_27, "Rechts Heben", PinState.LOW);
-        cutterRightDown = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_28, "Rechts Senken", PinState.LOW);
-        hydraulik = gpio.provisionDigitalOutputPin(RaspiBcmPin.GPIO_29, "Hydraulik", PinState.LOW);
-
-
-
-
     }
 
     public void cutterMainLift(int diraction) {
         switch (diraction) {
             case LiftUp:
-                cutterMainUp.high();
-                cutterMainDown.low();
+                cutterMainUp= on;
+                cutterMainDown= off;
                 break;
             case LiftDown:
-                cutterMainUp.low();
-                cutterMainDown.high();
+                cutterMainUp= off;
+                cutterMainDown= on;
                 break;
             default:
-                cutterMainUp.low();
-                cutterMainDown.low();
+                cutterMainUp= off;
+                cutterMainDown= off;
         }
     }
 
     public void cutterRightLift(int diraction) {
         switch (diraction) {
             case LiftUp:
-                cutterRightUp.high();
-                cutterRightDown.low();
+                cutterRightUp= on;
+                cutterRightDown= off;
                 break;
             case LiftDown:
-                cutterRightUp.low();
-                cutterRightDown.high();
+                cutterRightUp= off;
+                cutterRightDown= on;
                 break;
             default:
-                cutterRightUp.low();
-                cutterRightDown.low();
+                cutterRightUp= off;
+                cutterRightDown= off;
         }
     }
 
@@ -90,97 +67,108 @@ public class TractorFunctions {
     public void cutterLeftLift(int diraction) {
         switch (diraction) {
             case LiftUp:
-                cutterLeftUp.high();
-                cutterLeftDown.low();
+                cutterLeftUp= on;
+                cutterLeftDown= off;
                 break;
             case LiftDown:
-                cutterLeftUp.low();
-                cutterLeftDown.high();
+                cutterLeftUp= off;
+                cutterLeftDown= on;
                 break;
-            default:
-                cutterLeftUp.low();
-                cutterLeftDown.low();
+            case LiftStop:
+                cutterLeftUp= off;
+                cutterLeftDown= off;
         }
     }
     public void setWorklight(Boolean stat) {
         if (stat){
-            worklight.high();
+            worklight= on;
         } else {
-            worklight.low();
+            worklight= off;
         }
     }
 
     public void setCutterMain(Boolean stat) {
 
         if (stat){
-            cutterMain.high();
+            cutterMain= on;
         } else {
-            cutterMain.low();
+            cutterMain= off;
         }
     }
 
     public void setCutterleftonly(Boolean stat) {
         if (stat){
-            cutterLeftOnly.high();
+            cutterLeftOnly= off;
         } else {
-            cutterLeftOnly.low();
+            cutterLeftOnly= on;
         }
     }
 
+    public Boolean getLeftonlyState(){
+        if(cutterLeftOnly == off){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+
     public void setDrivingfast(Boolean stat) {
         if (stat){
-            drivingFast.high();
+            drivingFast= on;
         } else {
-            drivingFast.low();
+            drivingFast= off;
         }
     }
 
     public void setAllwheel(Boolean stat) {
         if (stat){
-            allWheel.high();
+            allWheel= on;
         } else {
-            allWheel.low();
+            allWheel= off;
         }
     }
 
 
     public void setHorn(Boolean stat) {
         if (stat){
-            horn.high();
+            horn= on;
         } else {
-            horn.low();
+            horn= off;
         }
     }
 
     public void setStandinglight(Boolean stat) {
         if (stat){
-            standingLight.high();
+            standingLight= on;
         } else {
-            standingLight.low();
+            standingLight= off;
         }
     }
 
     public void setCutterMainDamping(Boolean stat){
         if (stat){
-            cutterMainDamping.high();
+            cutterMainDamping= on;
         } else {
-            cutterMainDamping.low();
+            cutterMainDamping= off;
         }
     }
 
     public void setDrivinglight(Boolean stat) {
         if (stat){
-            drivingLight.high();
+            drivingLight= on;
         } else {
-            drivingLight.low();
+            drivingLight= off;
         }
     }
 
     public void setHydraulik(Boolean stat){
         if (stat){
-            hydraulik.high();
+            hydraulik= on;
+            System.out.println("Hydraulik An");
         } else {
-            hydraulik.low();
+            hydraulik= off;
+            System.out.println("Hydraulik Aus");
         }
     }
 }

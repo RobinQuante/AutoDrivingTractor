@@ -1,6 +1,8 @@
 package autodrivingtractor.grafik;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import autodrivingtractor.inout.Sequenz;
 
@@ -26,6 +28,17 @@ public class ControllButton extends Container {
         buttonStop.setBackground(Color.RED);
     }
 
+    public int getDirection(Object obj){
+        if(obj == buttonUp) {return 1;}
+        if(obj == buttonDown) {return -1;}
+        return 0;
+    }
+
+    public void setActionListener(ActionListener event){
+        buttonDown.addActionListener(event);
+        buttonUp.addActionListener(event);
+        buttonStop.addActionListener(event);
+    }
 
     public JButton getButtonUp(){
         return buttonUp;
@@ -36,7 +49,7 @@ public class ControllButton extends Container {
     }
 
     public JButton getButtonStop(){
-        return buttonDown;
+        return buttonStop;
     }
 
 }

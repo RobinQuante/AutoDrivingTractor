@@ -1,5 +1,7 @@
 package autodrivingtractor.grafik;
 
+import autodrivingtractor.SouthSideUpdate;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -34,7 +36,6 @@ public class SouthLine extends Container {
         this.add(speedValue);
         this.add(diractionValue);
         this.add(rotationSpeedValue);
-        update(70,60,13,270);
 
     }
 
@@ -45,7 +46,14 @@ public class SouthLine extends Container {
         diractionValue.setText(diraction + "");
     }
 
+    public void updateTemp(double oilTemp, double engienTemp){
+        tempOilValue.setText(oilTemp + "°C");
+        tempEngineValue.setText(engienTemp + "°C");
+    }
+
     public void updateRotationSpeed(int rotationSpeed){
         rotationSpeedValue.setText(rotationSpeed + "U/min");
     }
+
+
 }

@@ -2,24 +2,39 @@ package autodrivingtractor.grafik;
 
 import javax.swing.*;
 
+import autodrivingtractor.Config;
+import autodrivingtractor.SouthSideUpdate;
 import autodrivingtractor.inout.Sequenz;
 
 import java.awt.*;
 import java.util.ArrayList;
+
+
 public class Frame extends JFrame {
 
     SouthLine southLine;
 
     public Frame(){
+        System.out.println("Sequenz Start");
         Sequenz sequenz = new Sequenz();
+        System.out.println("Sequenz Ende");
         setUndecorated(true);
         //this.setSize(800, 480);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setJMenuBar(new Menubar());
+        System.out.println("Menubar Start");
+        Menubar menubar = new Menubar(sequenz.getFunctions());
+        this.setJMenuBar(menubar);
         this.setLayout(new BorderLayout());
         this.add(getFunctionContainer(sequenz), BorderLayout.CENTER);
+        System.out.println("Menubar Ende");
+        System.out.println("Southline Start");
         southLine = new SouthLine();
         this.add(southLine, BorderLayout.SOUTH);
+        System.out.println("Southline Ende");
+        System.out.println("Southline Update Start");
+        SouthSideUpdate slu = new SouthSideUpdate(southLine, menubar.getConfig());
+        slu.start();
+        System.out.println("Southline Update Ende");
         this.validate();
         this.repaint();
         this.setVisible(true);
@@ -49,9 +64,14 @@ public class Frame extends JFrame {
         rightCutter.getButtonStop().addActionListener(e -> {sequenz.sequenzRightCutterLift(0);});
         container.add(rightCutter);
 
+        JToggleButton cutterLeftOnly = new JToggleButton("Schneidwerk Rechts");
+        cutterLeftOnly.addActionListener(e ->  sequenz.sequenzCutterLeftOnly(!cutterLeftOnly.isSelected()));
+        container.add(cutterLeftOnly);
+
         JToggleButton cutterOn = new JToggleButton("Schneidwerk");
-        cutterOn.addActionListener(e ->  sequenz.sequenzCutterMain(cutterOn.isSelected()));
+        cutterOn.addActionListener(e ->  {sequenz.sequenzCutterMain(cutterOn.isSelected());});
         container.add(cutterOn);
+
 
         JToggleButton dumpingOn = new JToggleButton( "Dämpfung");
         dumpingOn.addActionListener(e -> sequenz.sequenzMainCutterDumpingOn(dumpingOn.isSelected()));
@@ -76,7 +96,7 @@ public class Frame extends JFrame {
         hydraulikAn.setIcon(new ImageIcon("src/main/resources/icons/hydraulic.png"));
         container.add(hydraulikAn);
 
-        JToggleButton horn = new JToggleButton("Hupe");
+        JButton horn = new JButton("Hupe");
         horn.addActionListener(e -> sequenz.sequenzHorn());
         //horn.setIcon(new ImageIcon("src/main/resources/icons/light.png"));
         container.add(horn);
@@ -97,10 +117,6 @@ public class Frame extends JFrame {
         container.add(drivingLight);
 
         return container;
-    }
-
-    public void updateGui(){
-
     }
 
     public SouthLine getSouthLine(){
